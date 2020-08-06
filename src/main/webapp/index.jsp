@@ -3,10 +3,14 @@
 <%@ page import="war.HelloAppEngine" %>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>Maps Tooling</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
   <link href='//fonts.googleapis.com/css?family=Marmelad' rel='stylesheet' type='text/css'>
-  <title>Hello App Engine Standard Java 8</title>
 </head>
 <body>
+    <h1>Maps Tooling</h1>
     <h1>Hello App Engine -- Java 8!</h1>
 
   <p>This is <%= HelloAppEngine.getInfo() %>.</p>
