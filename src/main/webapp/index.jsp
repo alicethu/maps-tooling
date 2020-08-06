@@ -5,23 +5,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Maps Tooling</title>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqPxexCVTuMCvd6ZgIvGEUr9QQxhNUX4k"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
   <link href='//fonts.googleapis.com/css?family=Marmelad' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body onload="createMap();">
     <h1>Maps Tooling</h1>
-    <h1>Hello App Engine -- Java 8!</h1>
-
-  <p>This is <%= HelloAppEngine.getInfo() %>.</p>
-  <table>
-    <tr>
-      <td colspan="2" style="font-weight:bold;">Available Servlets:</td>
-    </tr>
-    <tr>
-      <td><a href='/hello'>Hello App Engine</a></td>
-    </tr>
-  </table>
+    <div id="map"></div>
+</body>
 
 </body>
 </html>
