@@ -1,0 +1,10 @@
+#map {
+  border: thin solid black;
+  height: 700px;
+  width: 100%;
+  position: unset;
+}
+
+body {
+  margin: 50px;
+}
