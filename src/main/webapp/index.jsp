@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="war.HelloAppEngine" %>
 <html>
   <head>
-    <title>Place Search Pagination</title>
+    <meta charset="UTF-8">
+    <title>Maps Tooling</title>
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
