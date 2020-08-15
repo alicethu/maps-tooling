@@ -5,13 +5,6 @@
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=XXXXXXX&callback=initMap&libraries=places&v=weekly"
-      defer
-    ></script>
-
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
     <style type="text/css">
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -80,46 +73,51 @@
         margin: 5px 0 0 0;
       }
     </style>
+
     <script>
-      "use strict";
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+      var infoWindow, map, pos;
       function initMap() {
         // Create the map.
-        const newyork = {
+        var newyork = {
           lat: 40.7591703,
           lng: -74.0394425
         };
-        const map = new google.maps.Map(document.getElementById("map"), {
+
+        map = new google.maps.Map(document.getElementById("map"), {
           center: newyork,
           zoom: 17
-        }); // Create the places service.
-        const cityCircle = new google.maps.Circle({
+        }); 
+        
+        infoWindow = new google.maps.InfoWindow;
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            infoWindow.open(map);
+            map.setCenter(pos);
+
+            // Create the places service.
+            const cityCircle = new google.maps.Circle({
             strokeColor: "#6600ff",
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: "#6666ff",
             fillOpacity: 0.35,
             map: map,
-            center: {
-              lat: 40.7591703,
-              lng: -74.0394425
-              },
+            center: map.getCenter(),
             radius: 1000
           });
         const service = new google.maps.places.PlacesService(map);
-        let getNextPage;
-        const moreButton = document.getElementById("more");
-        moreButton.onclick = function() {
-          moreButton.disabled = true;
-          if (getNextPage) {
-            getNextPage();
-          }
-        }; // Perform a nearby search.
         service.nearbySearch(
           {
-            location: newyork,
+            location: map.getCenter(),
             radius: 1000,
             type: "restaurant"
           },
@@ -132,7 +130,25 @@
             }
           }
         );
-      }
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }//if and else
+
+        
+      }//init map
+    
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      }//handleLocationError
+
       function createMarkers(places, map) {
         const bounds = new google.maps.LatLngBounds();
         const placesList = document.getElementById("places");
@@ -155,7 +171,7 @@
           li.textContent = place.name;
           placesList.appendChild(li);
           bounds.extend(place.geometry.location);
-          placesArray.push(place.name);
+          placesArray.push(place.place_id);
         }
         map.fitBounds(bounds);
         var numResult = Math.floor(Math.random() * 20);
@@ -166,10 +182,15 @@
   </head>
   <body>
     <div id="map"></div>
+    
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnHjJrXSDt16Vgg76YOzIBK1KTid0cfeI&callback=initMap&libraries=places&v=weekly"
+      defer
+    ></script>
+    
     <div id="right-panel">
       <h2>Results</h2>
       <ul id="places"></ul>
-      <button id="more">More results</button>
     </div>
   </body>
 </html>
