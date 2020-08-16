@@ -21,7 +21,23 @@
         });
 
         infoWindow = new google.maps.InfoWindow;
-        // Try HTML5 geolocation.
+        doGeolocation(infoWindow, map, pos);
+
+        //Draw the circle and populate the search results
+        const service = new google.maps.places.PlacesService(map);
+        document.getElementById("results").addEventListener("click", () => {  
+            createCityCircle(pos);
+            doNearbySearch(service, map);
+        });
+
+        //change the map to the input location
+        const geocoder = new google.maps.Geocoder();
+        document.getElementById("submit").addEventListener("click", () => {
+          geocodeAddress(geocoder, map);
+        });
+      }//init map
+
+    function doGeolocation(infoWindow, map, pos){
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             pos = {
@@ -41,20 +57,7 @@
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }//if and else
-
-        //Draw the circle and populate the search results
-            const service = new google.maps.places.PlacesService(map);
-            document.getElementById("results").addEventListener("click", () => {  
-            createCityCircle(pos);
-            doNearbySearch(service, map);
-             });
-
-        //change the map to the input location
-        const geocoder = new google.maps.Geocoder();
-        document.getElementById("submit").addEventListener("click", () => {
-          geocodeAddress(geocoder, map);
-        });
-      }//init map
+    }//doGeolocation
 
     function doNearbySearch(service, map){
         service.nearbySearch(
