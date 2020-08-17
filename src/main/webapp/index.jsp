@@ -117,6 +117,10 @@
             //alert(restaurantChoice);
         }//createMarkers
 
+        function removeAllElements(){
+            document.getElementById("places").innerHTML = "";
+        }//removeAllElements
+
     function setMapOnAll(map) {
         for (let i = 0; i < markers.length; i++) {
           markers[i].setMap(map);
@@ -125,7 +129,7 @@
 
     function clearMarkers() {
         setMapOnAll(null);
-      }
+      }//clearMarkers
 
     function createCityCircle(pos){
         // Create the places service.
@@ -148,7 +152,6 @@
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }//handleLocationError
-
 
       function geocodeAddress(geocoder, map) {
         const address = document.getElementById("address").value;
@@ -193,6 +196,7 @@
       <button id="results">Generate Results</button>
       <button id="enableGeo">Use My Location</button>
       <input onclick="clearMarkers();" type="button" value="Hide Markers" />
+      <input type="button" value="Remove All" onclick="removeAllElements()">
     </div>
   </body>
 </html>
