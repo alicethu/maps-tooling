@@ -31,7 +31,7 @@
         right: 5px;
         top: 60%;
         margin-top: -195px;
-        height: 330px;
+        height: 360px;
         width: 200px;
         padding: 5px;
         z-index: 5;
@@ -76,4 +76,8 @@
         font-family: "Roboto", "sans-serif";
         line-height: 30px;
         padding-left: 10px;
+      }
+      #enableGeo {
+        width: 100%;
+        margin: 5px 0 0 0;
       }

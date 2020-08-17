@@ -6,7 +6,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
     <script>
-      var infoWindow, map, pos;
+      var infoWindow, map, pos, cityCircle;
 
       function initMap() {
         // Create the map.
@@ -17,15 +17,21 @@
 
         map = new google.maps.Map(document.getElementById("map"), {
           center: newyork,
-          zoom: 17
+          zoom: 15
+        });
+        
+        //Add button w click listener to enable location services
+        document.getElementById("enableGeo").addEventListener("click", () => {
+            infoWindow = new google.maps.InfoWindow;
+            doGeolocation(infoWindow, map, pos);
         });
 
-        infoWindow = new google.maps.InfoWindow;
-        doGeolocation(infoWindow, map, pos);
+        createCityCircle(pos);// always draw the circle, this keeps things from breaking later
 
-        //Draw the circle and populate the search results
+        //Redraw the circle and populate the search results
         const service = new google.maps.places.PlacesService(map);
         document.getElementById("results").addEventListener("click", () => {  
+            cityCircle.setMap(null);//deletes the origial circle to avoid redraws
             createCityCircle(pos);
             doNearbySearch(service, map);
         });
@@ -36,6 +42,7 @@
           geocodeAddress(geocoder, map);
         });
       }//init map
+
 
     function doGeolocation(infoWindow, map, pos){
         if (navigator.geolocation) {
@@ -75,7 +82,7 @@
 
     function createCityCircle(pos){
         // Create the places service.
-        const cityCircle = new google.maps.Circle({
+            cityCircle = new google.maps.Circle({
             strokeColor: "#6600ff",
             strokeOpacity: 0.8,
             strokeWeight: 2,
@@ -113,6 +120,7 @@
             title: place.name,
             position: place.geometry.location
           });
+        
           const li = document.createElement("li");
           li.textContent = place.name;
           placesList.appendChild(li);
@@ -120,12 +128,17 @@
           placesArray.push(place.place_id);
         }
         map.fitBounds(bounds);
+        //random result code
         var numResult = Math.floor(Math.random() * (placesArray.length));
         var restaurantChoice = placesArray[numResult];
-        alert(restaurantChoice);
+        //alert(restaurantChoice);
       }//createMarkers
 
-      function geocodeAddress(geocoder, resultsMap) {
+     function clearMarkers() {
+        setMapOnAll(null);
+      }//clearMarkers
+
+      function geocodeAddress(geocoder, map) {
         const address = document.getElementById("address").value;
         geocoder.geocode(
           {
@@ -133,9 +146,9 @@
           },
           (results, status) => {
             if (status === "OK") {
-              resultsMap.setCenter(results[0].geometry.location);
+              map.setCenter(results[0].geometry.location);
               new google.maps.Marker({
-                map: resultsMap,
+                map: map,
                 position: results[0].geometry.location
               });
             } else {
@@ -149,6 +162,7 @@
 
     </script>
   </head>
+  
   <body>
     <div id="floating-panel">
       <input id="address" type="textbox" value="Sydney, NSW" />
@@ -165,7 +179,7 @@
       <h2>Results</h2>
       <ul id="places"></ul>
       <button id="results">Generate Results</button>
+      <button id="enableGeo">Use My Location</button>
     </div>
   </body>
 </html>
-
