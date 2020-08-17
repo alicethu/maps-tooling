@@ -7,6 +7,7 @@
 
     <script>
       var infoWindow, map, pos, cityCircle;
+      var markers = [];
 
       function initMap() {
         // Create the map.
@@ -80,6 +81,52 @@
         );//nearbySearch
     }//doNearbySearch
 
+    function createMarkers(places, map) {
+            const bounds = new google.maps.LatLngBounds();
+            const placesList = document.getElementById("places");
+            const placesArray = [];
+            for (let i = 0, place; (place = places[i]); i++) {
+            const image = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+            const marker = new google.maps.Marker({
+                //map, //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
+                icon: image,
+                title: place.name,
+                position: place.geometry.location
+            });
+            
+            markers.push(marker);
+
+            const li = document.createElement("li");
+            li.textContent = place.name;
+            placesList.appendChild(li);
+            bounds.extend(place.geometry.location);
+            placesArray.push(place.place_id);
+            }//for loop
+
+            setMapOnAll(map);
+            map.fitBounds(bounds);
+            //random result code
+            var numResult = Math.floor(Math.random() * (placesArray.length));
+            var restaurantChoice = placesArray[numResult];
+            //alert(restaurantChoice);
+        }//createMarkers
+
+    function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }//setMapOnAll
+
+    function clearMarkers() {
+        setMapOnAll(null);
+      }
+
     function createCityCircle(pos){
         // Create the places service.
             cityCircle = new google.maps.Circle({
@@ -102,41 +149,6 @@
         infoWindow.open(map);
       }//handleLocationError
 
-      function createMarkers(places, map) {
-        const bounds = new google.maps.LatLngBounds();
-        const placesList = document.getElementById("places");
-        const placesArray = [];
-        for (let i = 0, place; (place = places[i]); i++) {
-          const image = {
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25)
-          };
-          new google.maps.Marker({
-            map,
-            icon: image,
-            title: place.name,
-            position: place.geometry.location
-          });
-        
-          const li = document.createElement("li");
-          li.textContent = place.name;
-          placesList.appendChild(li);
-          bounds.extend(place.geometry.location);
-          placesArray.push(place.place_id);
-        }
-        map.fitBounds(bounds);
-        //random result code
-        var numResult = Math.floor(Math.random() * (placesArray.length));
-        var restaurantChoice = placesArray[numResult];
-        //alert(restaurantChoice);
-      }//createMarkers
-
-     function clearMarkers() {
-        setMapOnAll(null);
-      }//clearMarkers
 
       function geocodeAddress(geocoder, map) {
         const address = document.getElementById("address").value;
@@ -180,6 +192,7 @@
       <ul id="places"></ul>
       <button id="results">Generate Results</button>
       <button id="enableGeo">Use My Location</button>
+      <input onclick="clearMarkers();" type="button" value="Hide Markers" />
     </div>
   </body>
 </html>
