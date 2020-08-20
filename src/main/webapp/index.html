@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Taiwan Team 8 Project</title>
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <!-- Stylesheet -->
+        <link rel="stylesheet" href="style.css">
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <!-- Javascript File -->
+        <script src="script.js"></script>
+        <!-- Google Maps -->
+        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnHjJrXSDt16Vgg76YOzIBK1KTid0cfeI&callback=initMap&libraries=places&v=weekly" frameborder="0" style="border:0" allowfullscreen></script>
+        <!-- Icons -->
+        <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet">
+    </head>
+  
+    <body>
+        <div class="container-fluid row">
+           
+            <!-- Google Map-->
+            <div class="col-lg-8 shadow-lg bg-white rounded">
+                <div id="map"></div>
+            </div>
+            <!-- Google Map -->
+
+            <!-- Restaurant -->
+            <div class="col-lg-4 content container text-center">
+                <h2>Restaurant Recommendation Tool</h2>
+                <!-- Search Address -->
+                <div class="input-group mb-3">
+                    <input id="address" type="text" class="form-control" value="New York, USA">
+                    <div class="input-group-append">
+                        <button id="submit" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
+                    </div>
+                </div>
+
+                <!-- Use Current Location -->
+                <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
+                
+                <!-- Search again -->
+                <button id="results" class="btn btn-outline-info"><i class="lni lni-restaurant"></i> Get Recommendation</button>
+
+                <!-- Result -->
+                <div class="card result-card">
+                    <i class="lni lni-restaurant card-img-top"></i>
+                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                    <div class="card-body">
+                        <h5 class="card-title" id="places">What's Your Next Restaurant?</h5>
+                        <p class="card-text">Restaurant Details</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div id="places"></div>
+
+            
+                <!-- <input onclick="deleteMarkers();" type="button" value="Hide Markers" /> -->
+                <!-- <input type="button" value="Remove All List Elements" onclick="removeAllElements()"> -->
+            </div>
+            <!-- Restaurant -->
+        </div>   
+    </body>
+</html>

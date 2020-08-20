@@ -1,16 +1,48 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800");
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  color: #8a8fa3; }
+
 /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #right-panel {
+* element that contains the map. */
+#map {
+    height: 100%;
+    position: absolute; 
+    top: 0; 
+    bottom: -200px; 
+    left: 0; 
+    right: 0; 
+}
+
+.container-fluid {
+    height: 100vh;  
+}
+
+.content {
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-card {
+    width: 30vw; 
+    height: 60vh; 
+    padding-top: 10vw; 
+    margin-top: 3vw;
+
+}
+/* Optional: Makes the sample page fill the window. */
+/* html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
+
+      /* #right-panel {
         font-family: "Roboto", "sans-serif";
         line-height: 30px;
         padding-left: 10px;
@@ -80,4 +112,6 @@
       #enableGeo {
         width: 100%;
         margin: 5px 0 0 0;
-      }
+      } */
+
+
