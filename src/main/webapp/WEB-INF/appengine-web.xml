@@ -5,4 +5,8 @@
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
+    <static-files>
+    <!-- prevent unwanted caching when accessing via the web preview server -->
+    <include path="/**" expiration="0s" />
+  </static-files>
 </appengine-web-app>
