@@ -36,8 +36,12 @@
                 <div class="input-group mb-3">
                     <input id="address" type="text" class="form-control" value="New York, USA">
                     <div class="input-group-append">
-                        <button id="submit" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
+                        <button id="submitLocation" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
                     </div>
+
+                    <input id="resize" type="number" step="1" value="1000" />
+                    <input id="submitRadius" type="button" value="Resize Radius" />
+
                 </div>
 
                 <!-- Use Current Location -->
@@ -58,9 +62,6 @@
                 </div>
                 <div id="places"></div>
 
-            
-                <!-- <input onclick="deleteMarkers();" type="button" value="Hide Markers" /> -->
-                <!-- <input type="button" value="Remove All List Elements" onclick="removeAllElements()"> -->
             </div>
             <!-- Restaurant -->
         </div>   

@@ -1,5 +1,6 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
+var rad = 1000;//standard radius value 
 
 //Function called in the browser request, this is the "main" function 
 function initMap() {
@@ -35,9 +36,18 @@ function initMap() {
 
     //change the map to the input location
     const geocoder = new google.maps.Geocoder();
-    document.getElementById("submit").addEventListener("click", () => {
+    document.getElementById("submitLocation").addEventListener("click", () => {
         geocodeAddress(geocoder, map);
     });
+
+    //resize the radius using the var "rad" which is used to draw the circle and create the nearbySearch results
+    //the issue is, when rad = an int, it works. When rad = doc.get, it does not
+    document.getElementById("submitRadius").addEventListener("click", () => {
+          //rad = document.getElementById("resize").value;
+          rad = 500;
+          cityCircle.setMap(null);//deletes the origial circle to avoid redraws
+          createCityCircle(pos);
+        });
 }//init map
 
 /*performs the geolocation service when requested; must be enabled by the user
@@ -74,7 +84,7 @@ function doNearbySearch(service, map){
         service.nearbySearch(
         {
             location: map.getCenter(),
-            radius: 1000,
+            radius: rad,
             type: "restaurant"
         },//specific parameters of the search
         (results, status, pagination) => {
@@ -178,7 +188,7 @@ function createCityCircle(pos){
             fillOpacity: 0.35,
             map: map,
             center: map.getCenter(),
-            radius: 1000
+            radius: rad
           });
 }//createCityCircle
 
