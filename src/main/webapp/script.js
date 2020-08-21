@@ -1,5 +1,6 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
+var rad = 1000;//standard radius value 
 
 //Function called in the browser request, this is the "main" function 
 function initMap() {
@@ -23,21 +24,29 @@ function initMap() {
 
     // always draw the circle, this keeps things from breaking later
     //ideally will restructure to remove this necessity
-    createCityCircle(pos);
+    createCityCircle();
 
     //Redraw the circle and populate the search results
     const service = new google.maps.places.PlacesService(map);
     document.getElementById("results").addEventListener("click", () => {  
         cityCircle.setMap(null);//deletes the origial circle to avoid redraws
-        createCityCircle(pos);
+        createCityCircle();
         doNearbySearch(service, map);
     });
 
     //change the map to the input location
     const geocoder = new google.maps.Geocoder();
-    document.getElementById("submit").addEventListener("click", () => {
+    document.getElementById("submitLocation").addEventListener("click", () => {
         geocodeAddress(geocoder, map);
     });
+
+    //resize the radius using the var "rad" which is used to draw the circle and create the nearbySearch results
+    //the issue is, when rad = an int, it works. When rad = doc.get, it does not
+    document.getElementById("submitRadius").addEventListener("click", () => {
+          rad = document.getElementById("resize").value;
+          cityCircle.setMap(null);//deletes the origial circle to avoid redraws
+          createCityCircle();
+        });
 }//init map
 
 /*performs the geolocation service when requested; must be enabled by the user
@@ -74,7 +83,7 @@ function doNearbySearch(service, map){
         service.nearbySearch(
         {
             location: map.getCenter(),
-            radius: 1000,
+            radius: rad,
             type: "restaurant"
         },//specific parameters of the search
         (results, status, pagination) => {
@@ -169,7 +178,7 @@ function deleteMarkers() {
 }//deleteMarkers
 
 //draws the visual representation of the radius
-function createCityCircle(pos){
+function createCityCircle(){
             cityCircle = new google.maps.Circle({
             strokeColor: "#6600ff",
             strokeOpacity: 0.8,
@@ -178,7 +187,8 @@ function createCityCircle(pos){
             fillOpacity: 0.35,
             map: map,
             center: map.getCenter(),
-            radius: 1000
+            radius: Number(rad)
+            //radius: 1000
           });
 }//createCityCircle
 
