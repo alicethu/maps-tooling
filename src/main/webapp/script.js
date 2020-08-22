@@ -22,6 +22,7 @@ function initMap() {
         doGeolocation(infoWindow, map, pos);
     });
 
+
     // always draw the circle, this keeps things from breaking later
     //ideally will restructure to remove this necessity
     createCityCircle();
@@ -47,6 +48,8 @@ function initMap() {
           cityCircle.setMap(null);//deletes the origial circle to avoid redraws
           createCityCircle();
         });
+    
+    
 }//init map
 
 /*performs the geolocation service when requested; must be enabled by the user
@@ -79,21 +82,25 @@ function doGeolocation(infoWindow, map, pos){
 /* performs the nearby search which returns the nearest restaurants within the specified radius and 
 * calls the createMarker() function
 */
-function doNearbySearch(service, map){
-        service.nearbySearch(
-        {
-            location: map.getCenter(),
-            radius: rad,
-            type: "restaurant"
-        },//specific parameters of the search
-        (results, status, pagination) => {
-            if (status !== "OK") return;
-            createMarkers(results, map);
-            }
-        );//nearbySearch
 
-        removeAllElements();
-}//doNearbySearch
+
+function doNearbySearch(service, map){
+  //filters results based on whether the user checked opennow or did not check it.
+  service.nearbySearch(
+  {
+      location: map.getCenter(),
+      radius: rad,
+      type: "restaurant",
+      openNow: document.getElementById("getOpenNow").checked
+  },//specific parameters of the search
+  (results, status, pagination) => {
+      if (status !== "OK") return;
+      createMarkers(results, map);
+      }
+  );//nearbySearch
+
+  removeAllElements();
+}//doNearbySearch 
 
 /*creates the map bounds, the places list, and each marker which is added to the array markers. The markers are individually
 * pushed and then placed on the map by the setMapOnAll() function. This method of creation allows for the easy hiding of markers
