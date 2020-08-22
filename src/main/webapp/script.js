@@ -22,7 +22,6 @@ function initMap() {
         doGeolocation(infoWindow, map, pos);
     });
 
-
     // always draw the circle, this keeps things from breaking later
     //ideally will restructure to remove this necessity
     createCityCircle();
@@ -49,40 +48,38 @@ function initMap() {
           createCityCircle();
         });
     
-    
 }//init map
 
 /*performs the geolocation service when requested; must be enabled by the user
 * can also be called again at any time in order to access the data again
 */
 function doGeolocation(infoWindow, map, pos){
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
-            map.setCenter(pos);
+      infoWindow.setPosition(pos);
+      infoWindow.setContent('Location found.');
+      infoWindow.open(map);
+      map.setCenter(pos);
 
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }//if and else
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }//if and else
 
-        removeAllElements();
+  removeAllElements();
 }//doGeolocation
 
 /* performs the nearby search which returns the nearest restaurants within the specified radius and 
 * calls the createMarker() function
 */
-
 
 function doNearbySearch(service, map){
   //filters results based on whether the user checked opennow or did not check it.
@@ -91,7 +88,9 @@ function doNearbySearch(service, map){
       location: map.getCenter(),
       radius: rad,
       type: "restaurant",
-      openNow: document.getElementById("getOpenNow").checked
+      openNow: document.getElementById("getOpenNow").checked,
+      minPriceLevel: (document.getElementById("maxprice").value - 1),
+      maxPriceLevel: document.getElementById("maxprice").value // @yinyin lets try and do multi range slider with bootstrap?
   },//specific parameters of the search
   (results, status, pagination) => {
       if (status !== "OK") return;
@@ -106,127 +105,130 @@ function doNearbySearch(service, map){
 * pushed and then placed on the map by the setMapOnAll() function. This method of creation allows for the easy hiding of markers
 * if the user wants to check a different location
 */
+
+
 function createMarkers(places, map) {
-            const bounds = new google.maps.LatLngBounds();
-            // const placesList = document.getElementById("places");
-            const placesArray = [];
-            for (let i = 0, place; (place = places[i]); i++) {
-                const image = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                    fillOpacity: 0.5
-                };
-                const marker = new google.maps.Marker({
-                    //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
-                    //retaining for now (so that I don't forget about it as a second way of creating markers), will delete later
-                    //if we decide to use the current method
-                    //map, 
-                    icon: image,
-                    title: place.name,
-                    position: place.geometry.location
-                });
-                
-                markers.push(marker);
+  const bounds = new google.maps.LatLngBounds();
+  // const placesList = document.getElementById("places");
+  const placesArray = [];
+  for (let i = 0, place; (place = places[i]); i++) {
+    const image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25),
+        fillOpacity: 0.5
+    };
+    const marker = new google.maps.Marker({
+        //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
+        //retaining for now (so that I don't forget about it as a second way of creating markers), will delete later
+        //if we decide to use the current method
+        //map, 
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+    });
+    
+    markers.push(marker);
 
-                // //this code deals with the HTML, which might be removed in the UI dev stage
-                // const li = document.createElement("li");
-                // li.textContent = place.name;
-                // placesList.appendChild(li);
-                bounds.extend(place.geometry.location);
+    // //this code deals with the HTML, which might be removed in the UI dev stage
+    // const li = document.createElement("li");
+    // li.textContent = place.name;
+    // placesList.appendChild(li);
+    bounds.extend(place.geometry.location);
 
-                //placesArray is redunant with the addition of markers, however it is still being actuvely used and I plan to clear it out 
-                //after a UI is establised 
-                placesArray.push(place.name);
-            }//for loop
+    //placesArray is redunant with the addition of markers, however it is still being actuvely used and I plan to clear it out 
+    //after a UI is establised 
+    placesArray.push(place.name);
+  }//for loop
 
-            setMapOnAll(map);// adds all the markers to the map via setMap()
-            map.fitBounds(bounds);
+  setMapOnAll(map);// adds all the markers to the map via setMap()
+  map.fitBounds(bounds);
 
-            // Add restaurant choice 
-            restaurantChoice = genRandomResult(placesArray); 
-            document.getElementById("places").innerHTML = restaurantChoice;
+  // Add restaurant choice 
+  restaurantChoice = genRandomResult(placesArray); 
+  document.getElementById("places").innerHTML = restaurantChoice;
+            
 }//createMarkers
 
 //code to generate a random location, currently stores/returns a place_id which can be used for place details requests
 function genRandomResult(placesArray){
-        var numResult = Math.floor(Math.random() * (placesArray.length));
-        var restaurantChoice = placesArray[numResult];
-        console.log("restaurant choice " + restaurantChoice)
-        //alert(restaurantChoice);
-        return restaurantChoice;
+  var numResult = Math.floor(Math.random() * (placesArray.length));
+  var restaurantChoice = placesArray[numResult];
+  console.log("restaurant choice " + restaurantChoice)
+  //alert(restaurantChoice);
+  return restaurantChoice;
 }//genRandomResult
 
 //removes all elements from the <ul>
 function removeAllElements(){
-        document.getElementById("places").innerHTML = "";
-        clearMarkers();
-        deleteMarkers();
-    }//removeAllElements
+  document.getElementById("places").innerHTML = "";
+  clearMarkers();
+  deleteMarkers();
+}//removeAllElements
 
 //puts all the markers on the map
 function setMapOnAll(map) {
-        for (let i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-        }
+  for (let i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
 }//setMapOnAll
 
 //sets all markers to null by using the setMapOnAll() function
 function clearMarkers() {
-        setMapOnAll(null);
+  setMapOnAll(null);
 }//clearMarkers
 
 //removes markers from the array so that they do not display again when a new location is called
 function deleteMarkers() {
-        clearMarkers();
-        markers = [];
+  clearMarkers();
+  markers = [];
 }//deleteMarkers
 
 //draws the visual representation of the radius
 function createCityCircle(){
-            cityCircle = new google.maps.Circle({
-            strokeColor: "#6600ff",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#6666ff",
-            fillOpacity: 0.35,
-            map: map,
-            center: map.getCenter(),
-            radius: Number(rad)
-            //radius: 1000
-          });
+  cityCircle = new google.maps.Circle({
+  strokeColor: "#6600ff",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: "#6666ff",
+  fillOpacity: 0.35,
+  map: map,
+  center: map.getCenter(),
+  radius: Number(rad)
+  //radius: 1000
+});
 }//createCityCircle
 
 //lets the user know that their location services are not functioning
 function handleLocationError(browserHasGeolocation, infoWindow, newyork) {
-        infoWindow.setPosition(newyork);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
+  infoWindow.setPosition(newyork);
+  infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
 }//handleLocationError
 
 //takes user input (street address, general location, etc) and turns it into coordinates
 function geocodeAddress(geocoder, map) {
-        const address = document.getElementById("address").value;
-        geocoder.geocode(
-          {
-            address: address
-          },
-          (results, status) => {
-            if (status === "OK") {
-              map.setCenter(results[0].geometry.location);
-              new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-              });
-            } else {
-              alert(
-                "Geocode was not successful for the following reason: " + status
-              );
-            }
-          }
+  const address = document.getElementById("address").value;
+  geocoder.geocode(
+    {
+      address: address
+    },
+    (results, status) => {
+      if (status === "OK") {
+        map.setCenter(results[0].geometry.location);
+        new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+        });
+      } else {
+        alert(
+          "Geocode was not successful for the following reason: " + status
         );
+      }
+    }
+  );
 }//geocodeAddress
