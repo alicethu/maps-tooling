@@ -31,7 +31,7 @@
 
             <!-- Restaurant -->
             <div class="col-lg-4 content container text-center">
-                <h2>Restaurant Recommendation Tool</h2>
+                <h3>Restaurant Recommendation Tool</h3>
                 <!-- Search Address -->
                 <div class="input-group mb-3">
                     <input id="address" type="text" class="form-control" value="New York, USA">
@@ -40,12 +40,20 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-center mb-3">
+                <div class="row d-flex justify-content-around mb-3">
                     <!-- Use Current Location -->
                     <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
+                    
+                    <!-- Open Now -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="getOpenNow" value="Open Now"/>
+                        <label class="form-check-label" for="getOpenNow">
+                            Show Open Now 
+                            <i class="lni lni-service"></i>
+                        </label>
+                    </div>
                 </div>
 
-                <!-- Filter -->
                 <!-- Radius -->
                 <div class="row d-flex justify-content-around mb-3">
                     <!-- <input id="resize" type="number" step="1" value="1000" /> -->
@@ -55,23 +63,27 @@
                     </div>
                     <input id="submitRadius" type="button" class="btn btn-outline-secondary" value="Resize Radius" />
                 </div>
-                
-                <!-- Open Now -->
-                <div class="row justify-content-center mb-3">
-                    <input id="getOpenNow" type="checkbox" value="Open Now"/> <label for="getOpenNow"> Show Open Now</label>
-                </div>
 
                 <!-- Price Level -->
-                <div class="row justify-content-center mb-3">
-                    <label for="maxprice">Choose a max price level:</label>
-                    <select name="maxprice" id="maxprice">
-                            <option value=1>$</option>
-                            <option value=2>$$</option>
-                            <option value=3>$$$</option>
-                            <option value=4>$$$$</option>
-                    </select>
+                <div class="form-group d-flex row justify-content-around mb-3">
+                    <label for="maxprice">Price level:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="maxprice" value="1">
+                        <label class="form-check-label" for="maxprice">$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="maxprice" value="2">
+                        <label class="form-check-label" for="maxprice">$$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="maxprice" value="3">
+                        <label class="form-check-label" for="maxprice">$$$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="maxprice" value="4">
+                        <label class="form-check-label" for="maxprice">$$$$</label>
+                    </div>
                 </div>
-                    
 
                 <!-- Search again -->
                 <button id="results" class="btn btn-outline-info"><i class="lni lni-restaurant"></i> Get Recommendation</button>
@@ -82,8 +94,8 @@
                     <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                     <div class="card-body">
                         <h5 class="card-title" id="places">What's Your Next Restaurant?</h5>
-                        <p class="card-text">Restaurant Details</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <p class="card-text">Restaurant Details (Address, Contact, Cuisine Type, Price Level, Dine In/Takeout, Max Cap etc)</p>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                     </div>
                 </div>
                 <div id="places"></div>

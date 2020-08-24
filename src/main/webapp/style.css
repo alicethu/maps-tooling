@@ -29,10 +29,9 @@ body {
 
 .result-card {
     width: 30vw; 
-    height: 60vh; 
+    height: 50vh; 
     padding-top: 10vw; 
-    margin-top: 3vw;
-
+    margin-top: 1.5vw;
 }
 
 /* Range Slider for Radius */
@@ -54,7 +53,7 @@ body {
   width: 25px;
   height: 25px;
   border-radius: 50%; 
-  background: #4CAF50;
+  background: #8a8fa3;
   cursor: pointer;
 }
 
@@ -62,6 +61,6 @@ body {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #4CAF50;
+  background: #8a8fa3;
   cursor: pointer;
 }
