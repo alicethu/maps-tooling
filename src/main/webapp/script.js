@@ -95,8 +95,8 @@ function doNearbySearch(service, map){
       radius: rad,
       type: "restaurant",
       openNow: document.getElementById("getOpenNow").checked,
-      minPriceLevel: (document.getElementById("maxprice").value - 1),
-      maxPriceLevel: document.getElementById("maxprice").value // @yinyin lets try and do multi range slider with bootstrap?
+      minPriceLevel: (document.getElementById("maxprice").value - 1), // @Claire: update backend according price level selected instead of min/max
+      maxPriceLevel: document.getElementById("maxprice").value 
   },//specific parameters of the search
   (results, status, pagination) => {
       if (status !== "OK") return;
@@ -114,47 +114,50 @@ function doNearbySearch(service, map){
 
 
 function createMarkers(places, map) {
-  const bounds = new google.maps.LatLngBounds();
-  // const placesList = document.getElementById("places");
-  const placesArray = [];
-  for (let i = 0, place; (place = places[i]); i++) {
-    const image = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25),
-        fillOpacity: 0.5
-    };
-    const marker = new google.maps.Marker({
-        //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
-        //retaining for now (so that I don't forget about it as a second way of creating markers), will delete later
-        //if we decide to use the current method
-        //map, 
-        icon: image,
-        title: place.name,
-        position: place.geometry.location
-    });
-    
-    markers.push(marker);
+    const bounds = new google.maps.LatLngBounds();
+    // const placesList = document.getElementById("places");
+    const placesArray = [];
+    for (let i = 0, place; (place = places[i]); i++) {
+        const image = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25),
+            fillOpacity: 0.5
+        };
+        const marker = new google.maps.Marker({
+            //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
+            //retaining for now (so that I don't forget about it as a second way of creating markers), will delete later
+            //if we decide to use the current method
+            //map, 
+            icon: image,
+            title: place.name,
+            position: place.geometry.location
+        });
+        
+        markers.push(marker);
 
-    // //this code deals with the HTML, which might be removed in the UI dev stage
-    // const li = document.createElement("li");
-    // li.textContent = place.name;
-    // placesList.appendChild(li);
-    bounds.extend(place.geometry.location);
+        // //this code deals with the HTML, which might be removed in the UI dev stage
+        bounds.extend(place.geometry.location);
 
-    //placesArray is redunant with the addition of markers, however it is still being actuvely used and I plan to clear it out 
-    //after a UI is establised 
-    placesArray.push(place.name);
-  }//for loop
+        //placesArray is redunant with the addition of markers, however it is still being actuvely used and I plan to clear it out 
+        //after a UI is establised 
+        placesArray.push(place);
+    }//for loop
 
-  setMapOnAll(map);// adds all the markers to the map via setMap()
-  map.fitBounds(bounds);
+    setMapOnAll(map);// adds all the markers to the map via setMap()
+    map.fitBounds(bounds);
 
-  // Add restaurant choice 
-  restaurantChoice = genRandomResult(placesArray); 
-  document.getElementById("places").innerHTML = restaurantChoice;
+    // Add restaurant choice 
+    restaurantChoice = genRandomResult(placesArray); 
+    // If restaurant choice is null
+    if (Object.is(restaurantChoice,null)) {
+        document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+    } else {
+        document.getElementById("places").innerHTML = restaurantChoice.name;
+        
+    }
             
 }//createMarkers
 
