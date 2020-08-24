@@ -38,26 +38,41 @@
                     <div class="input-group-append">
                         <button id="submitLocation" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
                     </div>
-
-                    <input id="resize" type="number" step="1" value="1000" />
-                    <input id="submitRadius" type="button" value="Resize Radius" />
-                    </br>
-                    <input id="getOpenNow" type="checkbox" value="Open Now"/> <label for="getOpenNow"> Show Open Now</label><br>
-                    <!-- <form class="multi-range-field my-5 pb-5">
-                      <input id="multi" class="multi-range" type="range" />
-                    </form> -->
-                    <label for="maxprice">Choose a max price level:</label>
-                      <select name="maxprice" id="maxprice">
-                        <option value=1>$</option>
-                        <option value=2>$$</option>
-                        <option value=3>$$$</option>
-                        <option value=4>$$$$</option>
-                      </select>
                 </div>
 
-                <!-- Use Current Location -->
-                <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
+                <div class="row justify-content-center mb-3">
+                    <!-- Use Current Location -->
+                    <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
+                </div>
+
+                <!-- Filter -->
+                <!-- Radius -->
+                <div class="row d-flex justify-content-around mb-3">
+                    <!-- <input id="resize" type="number" step="1" value="1000" /> -->
+                    <div class="slidecontainer">
+                        <input type="range" min="100" max="10000" value="1000" class="slider" id="resize" onChange="range()"/>
+                        <span id="radiusVal">1000 m</span>
+                    </div>
+                    <input id="submitRadius" type="button" class="btn btn-outline-secondary" value="Resize Radius" />
+                </div>
                 
+                <!-- Open Now -->
+                <div class="row justify-content-center mb-3">
+                    <input id="getOpenNow" type="checkbox" value="Open Now"/> <label for="getOpenNow"> Show Open Now</label>
+                </div>
+
+                <!-- Price Level -->
+                <div class="row justify-content-center mb-3">
+                    <label for="maxprice">Choose a max price level:</label>
+                    <select name="maxprice" id="maxprice">
+                            <option value=1>$</option>
+                            <option value=2>$$</option>
+                            <option value=3>$$$</option>
+                            <option value=4>$$$$</option>
+                    </select>
+                </div>
+                    
+
                 <!-- Search again -->
                 <button id="results" class="btn btn-outline-info"><i class="lni lni-restaurant"></i> Get Recommendation</button>
 

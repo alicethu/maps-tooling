@@ -50,6 +50,12 @@ function initMap() {
     
 }//init map
 
+function range() {
+    var p = document.getElementById('resize');
+    var res = document.getElementById('radiusVal');
+    res.innerHTML=p.value+ " m";
+}
+
 /*performs the geolocation service when requested; must be enabled by the user
 * can also be called again at any time in order to access the data again
 */
