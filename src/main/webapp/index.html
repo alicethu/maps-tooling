@@ -32,14 +32,14 @@
             <div class="col-lg-4 content container text-center">
                 <h3>Restaurant Recommendation Tool</h3>
                 <!-- Search Address -->
-                <div class="input-group mb-3">
+                <div class="row justify-content-center input-group mb-3 alignment-search">
                     <input id="address" type="text" class="form-control" value="New York, USA">
                     <div class="input-group-append">
                         <button id="submitLocation" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
                     </div>
                 </div>
 
-                <div class="row d-flex justify-content-around mb-3">
+                <div class="row justify-content-between mb-3 alignment">
                     <!-- Use Current Location -->
                     <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
                     
@@ -54,17 +54,18 @@
                 </div>
 
                 <!-- Radius -->
-                <div class="row d-flex justify-content-around mb-3">
+                <div class="row justify-content-between mb-3 alignment">
+                    <label>Resize radius:</label>
                     <!-- <input id="resize" type="number" step="1" value="1000" /> -->
                     <div class="slidecontainer">
                         <input type="range" min="100" max="10000" value="1000" class="slider" id="resize" onChange="range()"/>
                         <span id="radiusVal">1000 m</span>
                     </div>
-                    <input id="submitRadius" type="button" class="btn btn-outline-secondary" value="Resize Radius" />
+                    <!-- <input id="submitRadius" type="button" class="btn btn-outline-secondary" value="Resize Radius" /> -->
                 </div>
 
                 <!-- Price Level -->
-                <div class="form-group d-flex row justify-content-around mb-3">
+                <div class="form-group row justify-content-between mb-3 alignment">
                     <label for="maxprice">Price level:</label>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="maxprice" value="1">

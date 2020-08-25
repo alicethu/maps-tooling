@@ -40,20 +40,24 @@ function initMap() {
         geocodeAddress(geocoder, map);
     });
 
-    //resize the radius using the var "rad" which is used to draw the circle and create the nearbySearch results
-    //the issue is, when rad = an int, it works. When rad = doc.get, it does not
-    document.getElementById("submitRadius").addEventListener("click", () => {
-          rad = document.getElementById("resize").value;
-          cityCircle.setMap(null);//deletes the origial circle to avoid redraws
-          createCityCircle();
-        });
+    // //resize the radius using the var "rad" which is used to draw the circle and create the nearbySearch results
+    // //the issue is, when rad = an int, it works. When rad = doc.get, it does not
+    // document.getElementById("submitRadius").addEventListener("click", () => {
+    //       rad = document.getElementById("resize").value;
+    //       cityCircle.setMap(null);//deletes the origial circle to avoid redraws
+    //       createCityCircle();
+    //     });
     
 }//init map
 
+// Update the radius as radius slider change and redraw the city circle
 function range() {
     var p = document.getElementById('resize');
     var res = document.getElementById('radiusVal');
+    rad = p.value;
     res.innerHTML=p.value+ " m";
+    cityCircle.setMap(null);//deletes the origial circle to avoid redraws
+    createCityCircle();
 }
 
 /*performs the geolocation service when requested; must be enabled by the user

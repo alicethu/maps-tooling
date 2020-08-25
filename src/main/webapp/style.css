@@ -27,11 +27,22 @@ body {
   overflow: hidden;
 }
 
+.alignment {
+    margin-left: 1.5vw;
+    margin-right: 1.5vw;
+}
+
+.alignment-search {
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
+
 .result-card {
     width: 30vw; 
     height: 50vh; 
     padding-top: 10vw; 
-    margin-top: 1.5vw;
+    padding-bottom: 10vw; 
+    margin: 1.5vw;
 }
 
 /* Range Slider for Radius */
