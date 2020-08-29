@@ -27,27 +27,65 @@
             <div class="col-lg-8 shadow-lg bg-white rounded">
                 <div id="map"></div>
             </div>
-            <!-- Google Map -->
 
             <!-- Restaurant -->
             <div class="col-lg-4 content container text-center">
-                <h2>Restaurant Recommendation Tool</h2>
+                <h3>Taiwan Team 8 Project: Restaurant Recommendation</h3>
                 <!-- Search Address -->
-                <div class="input-group mb-3">
+                <div class="row justify-content-center input-group mb-3 alignment-search">
                     <input id="address" type="text" class="form-control" value="New York, USA">
                     <div class="input-group-append">
                         <button id="submitLocation" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
                     </div>
-
-                    <input id="resize" type="number" step="1" value="1000" />
-                    <input id="submitRadius" type="button" value="Resize Radius" />
-
                 </div>
 
-                <!-- Use Current Location -->
-                <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
-                
-                <!-- Search again -->
+                <div class="row justify-content-between mb-3 alignment">
+                    <!-- Use Current Location -->
+                    <button id="enableGeo" class="btn btn-outline-secondary"><i class="lni lni-travel"></i> Use My Location</button>
+                    
+                    <!-- Open Now -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="getOpenNow" value="Open Now"/>
+                        <label class="form-check-label" for="getOpenNow">
+                            Show Open Now 
+                            <i class="lni lni-service"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Radius -->
+                <div class="row justify-content-between mb-3 alignment">
+                    <label>Resize radius:</label>
+                    <!-- <input id="resize" type="number" step="1" value="1000" /> -->
+                    <div class="slidecontainer">
+                        <input type="range" min="100" max="10000" value="1000" class="slider" id="resize" onChange="range()"/>
+                        <span id="radiusVal">1000 m</span>
+                    </div>
+                    <!-- <input id="submitRadius" type="button" class="btn btn-outline-secondary" value="Resize Radius" /> -->
+                </div>
+
+                <!-- Price Level -->
+                <div class="form-group row justify-content-between mb-3 alignment">
+                    <label for="price1">Price level:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="price1" value="1" onclick="updatePriceLevels()">
+                        <label class="form-check-label" for="price1">$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="price2" value="2" onclick="updatePriceLevels()">
+                        <label class="form-check-label" for="price2">$$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="price3" value="3" onclick="updatePriceLevels()">
+                        <label class="form-check-label" for="price3">$$$</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="price4" value="4" onclick="updatePriceLevels()">
+                        <label class="form-check-label" for="price4">$$$$</label>
+                    </div>
+                </div>
+
+                <!-- Get Recommendation -->
                 <button id="results" class="btn btn-outline-info"><i class="lni lni-restaurant"></i> Get Recommendation</button>
 
                 <!-- Result -->
@@ -56,8 +94,8 @@
                     <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                     <div class="card-body">
                         <h5 class="card-title" id="places">What's Your Next Restaurant?</h5>
-                        <p class="card-text">Restaurant Details</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <p class="card-text" id="placeDetails">Restaurant Details (Address, Contact, Cuisine Type, Price Level, Dine In/Takeout, Max Cap etc)</p>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                     </div>
                 </div>
                 <div id="places"></div>
