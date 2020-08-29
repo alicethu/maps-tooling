@@ -1,6 +1,8 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
 var rad = 1000;//standard radius value 
+var minPriceLvl = 0;;
+var maxPriceLvl = 4
 
 //Function called in the browser request, this is the "main" function 
 function initMap() {
@@ -31,6 +33,7 @@ function initMap() {
     document.getElementById("results").addEventListener("click", () => {  
         cityCircle.setMap(null);//deletes the origial circle to avoid redraws
         createCityCircle();
+        updatePriceLevels();
         doNearbySearch(service, map);
     });
 
@@ -60,6 +63,21 @@ function range() {
     createCityCircle();
 }
 
+function updatePriceLevels() {
+  var prices = ["price1", "price2", "price3", "price4"];
+  for (i = 0; i < 4; i++) {
+    if (document.getElementById(prices[i]).checked) {
+      minPriceLvl = document.getElementById(prices[i]).value;
+      break;
+    }
+  }
+  for (i = minPriceLvl; i < 4; i++) {
+    if (document.getElementById(prices[i]).checked) {
+      maxPriceLvl = document.getElementById(prices[i]).value;
+    }
+  }
+}
+
 /*performs the geolocation service when requested; must be enabled by the user
 * can also be called again at any time in order to access the data again
 */
@@ -83,8 +101,7 @@ function doGeolocation(infoWindow, map, pos){
     // Browser doesn't support Geolocation
     handleLocationError(false, infoWindow, map.getCenter());
   }//if and else
-
-  removeAllElements();
+  removeAllElements();""
 }//doGeolocation
 
 /* performs the nearby search which returns the nearest restaurants within the specified radius and 
@@ -99,8 +116,8 @@ function doNearbySearch(service, map){
       radius: rad,
       type: "restaurant",
       openNow: document.getElementById("getOpenNow").checked,
-      minPriceLevel: (document.getElementById("maxprice").value - 1), // @Claire: update backend according price level selected instead of min/max
-      maxPriceLevel: document.getElementById("maxprice").value 
+      minPriceLevel: minPriceLvl,  
+      maxPriceLevel: maxPriceLvl
   },//specific parameters of the search
   (results, status, pagination) => {
       if (status !== "OK") return;
