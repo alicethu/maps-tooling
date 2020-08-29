@@ -51,23 +51,23 @@ function initMap() {
     //       createCityCircle();
     //     });
 
-    //the place details request code
-    getPlaceDetails(service, map);
-
 }//init map
 
-function getPlaceDetails(service, map){
+function getPlaceDetails(map, restaurantChoice){
         const request = {
-        placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-        fields: ["name", "formatted_address", "place_id", "geometry"]
+        placeId: restaurantChoice.place_id,
+        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry"]
     };
     const infowindow = new google.maps.InfoWindow();
+    const service = new google.maps.places.PlacesService(map);
     service.getDetails(request, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
         const marker = new google.maps.Marker({
             map,
             position: place.geometry.location
         });
+        
+        document.getElementById("places").innerHTML = place.formatted_phone_number;
         google.maps.event.addListener(marker, "click", function() {
             infowindow.setContent(
             "<div><strong>" +
@@ -81,9 +81,9 @@ function getPlaceDetails(service, map){
             );
             infowindow.open(map, this);
         });
+        
         }
     });
-
 }//getPlaceDetails
 
 // Update the radius as radius slider change and redraw the city circle
@@ -206,13 +206,17 @@ function createMarkers(places, map) {
     // Add restaurant choice 
     restaurantChoice = genRandomResult(placesArray); 
 
+    //the place details request code
+    getPlaceDetails(map, restaurantChoice);
+
     // If restaurant choice is null
+    /*
     if (Object.is(restaurantChoice,null)) {
         document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
     } else {
-        document.getElementById("places").innerHTML = restaurantChoice.name;
+        document.getElementById("places").innerHTML = restaurantChoice.formatted_address;
     }
-            
+    */     
 }//createMarkers
 
 //code to generate a random location, currently stores/returns a place_id which can be used for place details requests
