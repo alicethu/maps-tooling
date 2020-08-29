@@ -1,5 +1,6 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
+var choiceMarkers = [];
 var rad = 1000;//standard radius value 
 var minPriceLvl = 0;;
 var maxPriceLvl = 4
@@ -66,8 +67,15 @@ function getPlaceDetails(map, restaurantChoice){
             map,
             position: place.geometry.location
         });
-        
-        document.getElementById("places").innerHTML = place.formatted_phone_number;
+        choiceMarkers.push(marker);
+
+        // If restaurant choice is null
+        if (Object.is(place,null)) {
+            document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+        } else {
+            document.getElementById("places").innerHTML = place.name + "\n\r" + place.formatted_address;
+        }
+
         google.maps.event.addListener(marker, "click", function() {
             infowindow.setContent(
             "<div><strong>" +
@@ -80,8 +88,8 @@ function getPlaceDetails(map, restaurantChoice){
                 "</div>"
             );
             infowindow.open(map, this);
-        });
-        
+        });//eventListener
+
         }
     });
 }//getPlaceDetails
@@ -207,16 +215,7 @@ function createMarkers(places, map) {
     restaurantChoice = genRandomResult(placesArray); 
 
     //the place details request code
-    getPlaceDetails(map, restaurantChoice);
-
-    // If restaurant choice is null
-    /*
-    if (Object.is(restaurantChoice,null)) {
-        document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
-    } else {
-        document.getElementById("places").innerHTML = restaurantChoice.formatted_address;
-    }
-    */     
+    getPlaceDetails(map, restaurantChoice);   
 }//createMarkers
 
 //code to generate a random location, currently stores/returns a place_id which can be used for place details requests
@@ -240,6 +239,9 @@ function setMapOnAll(map) {
   for (let i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
+  for (let i = 0; i < choiceMarkers.length; i++) {
+    choiceMarkers[i].setMap(map);
+  } 
 }//setMapOnAll
 
 //sets all markers to null by using the setMapOnAll() function
@@ -251,6 +253,7 @@ function clearMarkers() {
 function deleteMarkers() {
   clearMarkers();
   markers = [];
+  choiceMarkers = [];
 }//deleteMarkers
 
 //draws the visual representation of the radius
