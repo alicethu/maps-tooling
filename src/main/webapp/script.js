@@ -50,8 +50,41 @@ function initMap() {
     //       cityCircle.setMap(null);//deletes the origial circle to avoid redraws
     //       createCityCircle();
     //     });
-    
+
+    //the place details request code
+    getPlaceDetails(service, map);
+
 }//init map
+
+function getPlaceDetails(service, map){
+        const request = {
+        placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+        fields: ["name", "formatted_address", "place_id", "geometry"]
+    };
+    const infowindow = new google.maps.InfoWindow();
+    service.getDetails(request, (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+        const marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location
+        });
+        google.maps.event.addListener(marker, "click", function() {
+            infowindow.setContent(
+            "<div><strong>" +
+                place.name +
+                "</strong><br>" +
+                "Place ID: " +
+                place.place_id +
+                "<br>" +
+                place.formatted_address +
+                "</div>"
+            );
+            infowindow.open(map, this);
+        });
+        }
+    });
+
+}//getPlaceDetails
 
 // Update the radius as radius slider change and redraw the city circle
 function range() {
@@ -172,12 +205,12 @@ function createMarkers(places, map) {
 
     // Add restaurant choice 
     restaurantChoice = genRandomResult(placesArray); 
+
     // If restaurant choice is null
     if (Object.is(restaurantChoice,null)) {
         document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
     } else {
         document.getElementById("places").innerHTML = restaurantChoice.name;
-        
     }
             
 }//createMarkers
