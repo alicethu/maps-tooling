@@ -94,9 +94,9 @@ function getPlaceDetails(map, restaurantChoice){
             }
             if (place.website) {
                 if (place.website.length > 80) {
-                    document.getElementById("website").innerHTML = 'Website : ' + place.website.substring(0, 80);
+                    document.getElementById("website").innerHTML = 'Website : <a href="' + place.website.substring(0, 80) + '">Click here!</a>';
                 } else {
-                    document.getElementById("website").innerHTML = 'Website : ' + place.website;
+                    document.getElementById("website").innerHTML = 'Website : <a href="' + place.website  + '">Click here!</a>';
                 }
             } else {
                 document.getElementById("website").innerHTML = "";
