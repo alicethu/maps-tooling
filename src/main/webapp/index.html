@@ -15,7 +15,7 @@
         <!-- Javascript File -->
         <script src="script.js"></script>
         <!-- Google Maps -->
-        <script defer src="https://maps.googleapis.com/maps/api/js?key=xxx&callback=initMap&libraries=places&v=weekly" frameborder="0" style="border:0" allowfullscreen></script>
+        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnHjJrXSDt16Vgg76YOzIBK1KTid0cfeI&callback=initMap&libraries=places&v=weekly" frameborder="0" style="border:0" allowfullscreen></script>
         <!-- Icons -->
         <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet">
     </head>
@@ -33,7 +33,7 @@
                 <h3>Taiwan Team 8 Project: Restaurant Recommender</h3>
                 <!-- Search Address -->
                 <div class="row justify-content-center input-group mb-3 alignment-search">
-                    <input id="address" type="text" class="form-control" value="New York, USA">
+                    <input id="geoaddress" type="text" class="form-control" value="New York, USA">
                     <div class="input-group-append">
                         <button id="submitLocation" class="btn btn-outline-secondary"><i class="lni lni-search-alt"></i> Search Address</button>
                     </div>
@@ -90,7 +90,8 @@
 
                 <!-- Result -->
                 <div id="result-restaurant" class="card result-card" style="visibility: hidden;">
-                    <h6 class="card-title">Recommended Restaurant:</h6>
+                    <h6 id="title" class="card-title">Recommended Restaurant:</h6>
+                    <!-- <i id="icon" class="lni lni-restaurant card-img-top"></i> -->
                     <img id="icon" class="card-img-top restaurant-photo" src="/images/resta.png" >
                     <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                     <div class="card-body">
