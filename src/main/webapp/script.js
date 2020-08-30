@@ -1,6 +1,7 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
 var choiceMarkers = [];
+var searchResMarkers = [];
 var rad = 1000;//standard radius value 
 var minPriceLvl = 0;;
 var maxPriceLvl = 4
@@ -44,17 +45,10 @@ function initMap() {
     document.getElementById("submitLocation").addEventListener("click", () => {
         geocodeAddress(geocoder, map);
     });
-
-    // //resize the radius using the var "rad" which is used to draw the circle and create the nearbySearch results
-    // //the issue is, when rad = an int, it works. When rad = doc.get, it does not
-    // document.getElementById("submitRadius").addEventListener("click", () => {
-    //       rad = document.getElementById("resize").value;
-    //       cityCircle.setMap(null);//deletes the origial circle to avoid redraws
-    //       createCityCircle();
-    //     });
-
 }//init map
 
+//performs a place Details Request on the selected place to get more information for the user. In the intetest of efficiency, this is 
+//only called on one place per request
 function getPlaceDetails(map, restaurantChoice){
         const request = {
         placeId: restaurantChoice.place_id,
@@ -107,21 +101,8 @@ function getPlaceDetails(map, restaurantChoice){
             } else {
                 document.getElementById("rating").innerHTML = "";
             }
-            // if (place.icon) {
-            //     document.getElementById("icon").src = place.icon;
-            // } else {
-            //     document.getElementById("icon").src = "/images/food.png";
-            // }
-            
-        } else {
-            console.log("No Restaurant found")
-            document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
-            document.getElementById("address").innerHTML = "";
-            document.getElementById("phone").innerHTML = "";
-            document.getElementById("website").innerHTML = "";
-            document.getElementById("rating").innerHTML = "";
-        }
-
+        
+        } 
         google.maps.event.addListener(marker, "click", function() {
             infowindow.setContent(
             "<div><strong>" +
@@ -133,7 +114,7 @@ function getPlaceDetails(map, restaurantChoice){
             infowindow.open(map, this);
         });//eventListener
 
-        }
+        }//if OK
     });
 }//getPlaceDetails
 
@@ -145,8 +126,9 @@ function range() {
     res.innerHTML=p.value+ " m";
     cityCircle.setMap(null);//deletes the origial circle to avoid redraws
     createCityCircle();
-}
+}//range
 
+//Update the price level of the restaurants
 function updatePriceLevels() {
   var prices = ["price1", "price2", "price3", "price4"];
   for (i = 0; i < 4; i++) {
@@ -154,13 +136,13 @@ function updatePriceLevels() {
       minPriceLvl = document.getElementById(prices[i]).value;
       break;
     }
-  }
+  }//for
   for (i = minPriceLvl; i < 4; i++) {
     if (document.getElementById(prices[i]).checked) {
       maxPriceLvl = document.getElementById(prices[i]).value;
     }
-  }
-}
+  }//for 
+}//updatePriceLevels
 
 /*performs the geolocation service when requested; must be enabled by the user
 * can also be called again at any time in order to access the data again
@@ -191,7 +173,6 @@ function doGeolocation(infoWindow, map, pos){
 /* performs the nearby search which returns the nearest restaurants within the specified radius and 
 * calls the createMarker() function
 */
-
 function doNearbySearch(service, map){
   //filters results based on whether the user checked opennow or did not check it.
   service.nearbySearch(
@@ -206,7 +187,7 @@ function doNearbySearch(service, map){
   (results, status, pagination) => {
       if (status !== "OK") { 
         document.getElementById("result-restaurant").style.visibility = 'visible';
-        document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+        document.getElementById("places").innerHTML = "Oops! You're too picky, choose another location or change your filters!";
         document.getElementById("title").innerHTML = "";
         document.getElementById("icon").innerHTML = "";
         document.getElementById("address").innerHTML = "";
@@ -225,8 +206,6 @@ function doNearbySearch(service, map){
 * pushed and then placed on the map by the setMapOnAll() function. This method of creation allows for the easy hiding of markers
 * if the user wants to check a different location
 */
-
-
 function createMarkers(places, map) {
     console.log("places length "+places.length)
     const bounds = new google.maps.LatLngBounds();
@@ -242,10 +221,6 @@ function createMarkers(places, map) {
             fillOpacity: 0.5
         };
         const marker = new google.maps.Marker({
-            //this when enabled adds the markers to the map. Getting rid of and using the built in setMap() function
-            //retaining for now (so that I don't forget about it as a second way of creating markers), will delete later
-            //if we decide to use the current method
-            //map, 
             icon: image,
             title: place.name,
             position: place.geometry.location
@@ -298,6 +273,9 @@ function setMapOnAll(map) {
   for (let i = 0; i < choiceMarkers.length; i++) {
     choiceMarkers[i].setMap(map);
   } 
+   for (let i = 0; i < searchResMarkers.length; i++) {
+    searchResMarkers[i].setMap(map);
+  } 
 }//setMapOnAll
 
 //sets all markers to null by using the setMapOnAll() function
@@ -310,6 +288,7 @@ function deleteMarkers() {
   clearMarkers();
   markers = [];
   choiceMarkers = [];
+  searchResMarkers = [];
 }//deleteMarkers
 
 //draws the visual representation of the radius
@@ -338,6 +317,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, newyork) {
 
 //takes user input (street address, general location, etc) and turns it into coordinates
 function geocodeAddress(geocoder, map) {
+  deleteMarkers();//clean slate for new search
   const address = document.getElementById("geoaddress").value;
   document.getElementById("result-restaurant").style.visibility = 'hidden';
   geocoder.geocode(
@@ -347,10 +327,11 @@ function geocodeAddress(geocoder, map) {
     (results, status) => {
       if (status === "OK") {
         map.setCenter(results[0].geometry.location);
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           map: map,
           position: results[0].geometry.location
         });
+        searchResMarkers.push(marker);
       } else {
         alert(
           "Geocode was not successful for the following reason: " + status
