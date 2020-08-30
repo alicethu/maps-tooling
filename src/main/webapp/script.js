@@ -115,7 +115,7 @@ function getPlaceDetails(map, restaurantChoice){
             
         } else {
             console.log("No Restaurant found")
-            document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+            document.getElementById("places").innerHTML = "Oops you're too picky, please try another search (choose another location, widen the radius, or change your filters)!";
             document.getElementById("address").innerHTML = "";
             document.getElementById("phone").innerHTML = "";
             document.getElementById("website").innerHTML = "";
