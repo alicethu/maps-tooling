@@ -1,5 +1,6 @@
 var infoWindow, map, pos, cityCircle;
 var markers = [];
+var choiceMarkers = [];
 var rad = 1000;//standard radius value 
 var minPriceLvl = 0;;
 var maxPriceLvl = 4
@@ -50,8 +51,48 @@ function initMap() {
     //       cityCircle.setMap(null);//deletes the origial circle to avoid redraws
     //       createCityCircle();
     //     });
-    
+
 }//init map
+
+function getPlaceDetails(map, restaurantChoice){
+        const request = {
+        placeId: restaurantChoice.place_id,
+        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry"]
+    };
+    const infowindow = new google.maps.InfoWindow();
+    const service = new google.maps.places.PlacesService(map);
+    service.getDetails(request, (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+        const marker = new google.maps.Marker({
+            map,
+            position: place.geometry.location
+        });
+        choiceMarkers.push(marker);
+
+        // If restaurant choice is null
+        if (Object.is(place,null)) {
+            document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+        } else {
+            document.getElementById("places").innerHTML = place.name + "\n\r" + place.formatted_address;
+        }
+
+        google.maps.event.addListener(marker, "click", function() {
+            infowindow.setContent(
+            "<div><strong>" +
+                place.name +
+                "</strong><br>" +
+                "Place ID: " +
+                place.place_id +
+                "<br>" +
+                place.formatted_address +
+                "</div>"
+            );
+            infowindow.open(map, this);
+        });//eventListener
+
+        }
+    });
+}//getPlaceDetails
 
 // Update the radius as radius slider change and redraw the city circle
 function range() {
@@ -172,14 +213,9 @@ function createMarkers(places, map) {
 
     // Add restaurant choice 
     restaurantChoice = genRandomResult(placesArray); 
-    // If restaurant choice is null
-    if (Object.is(restaurantChoice,null)) {
-        document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
-    } else {
-        document.getElementById("places").innerHTML = restaurantChoice.name;
-        
-    }
-            
+
+    //the place details request code
+    getPlaceDetails(map, restaurantChoice);   
 }//createMarkers
 
 //code to generate a random location, currently stores/returns a place_id which can be used for place details requests
@@ -203,6 +239,9 @@ function setMapOnAll(map) {
   for (let i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
+  for (let i = 0; i < choiceMarkers.length; i++) {
+    choiceMarkers[i].setMap(map);
+  } 
 }//setMapOnAll
 
 //sets all markers to null by using the setMapOnAll() function
@@ -214,6 +253,7 @@ function clearMarkers() {
 function deleteMarkers() {
   clearMarkers();
   markers = [];
+  choiceMarkers = [];
 }//deleteMarkers
 
 //draws the visual representation of the radius
