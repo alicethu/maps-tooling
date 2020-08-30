@@ -21,6 +21,7 @@ function initMap() {
         
     //Add button w click listener to enable location services
     document.getElementById("enableGeo").addEventListener("click", () => {
+        document.getElementById("result-restaurant").style.visibility = 'hidden';
         infoWindow = new google.maps.InfoWindow;
         doGeolocation(infoWindow, map, pos);
     });
@@ -57,10 +58,17 @@ function initMap() {
 function getPlaceDetails(map, restaurantChoice){
         const request = {
         placeId: restaurantChoice.place_id,
-        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry"]
+        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry", "opening_hours", "website", "icon", "rating"]
     };
     const infowindow = new google.maps.InfoWindow();
     const service = new google.maps.places.PlacesService(map);
+
+    document.getElementById("result-restaurant").style.visibility = 'hidden';
+    document.getElementById("address").innerHTML = "";
+    document.getElementById("phone").innerHTML = "";
+    document.getElementById("website").innerHTML = "";
+    document.getElementById("rating").innerHTML = "";
+
     service.getDetails(request, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
         const marker = new google.maps.Marker({
@@ -69,11 +77,49 @@ function getPlaceDetails(map, restaurantChoice){
         });
         choiceMarkers.push(marker);
 
-        // If restaurant choice is null
-        if (Object.is(place,null)) {
-            document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+        console.log("place " + place.name);
+        if (place.name) {
+            document.getElementById("result-restaurant").style.visibility = 'visible';
+    
+            document.getElementById("places").innerHTML = place.name;
+            if(place.formatted_phone_number) {
+                document.getElementById("address").innerHTML = '<i class="lni lni-restaurant"></i> Address : ' + place.formatted_address;
+            } else {
+                document.getElementById("address").innerHTML = "";
+            }
+            if(place.formatted_phone_number) {
+                document.getElementById("phone").innerHTML = '<i class="lni lni-phone"></i> Phone : ' + place.formatted_phone_number;
+            } else {
+                document.getElementById("phone").innerHTML = "";
+            }
+            if (place.website) {
+                if (place.website.length > 80) {
+                    document.getElementById("website").innerHTML = 'Website : <a href="' + place.website.substring(0, 80) + '">Click here!</a>';
+                } else {
+                    document.getElementById("website").innerHTML = 'Website : <a href="' + place.website  + '">Click here!</a>';
+                }
+            } else {
+                document.getElementById("website").innerHTML = "";
+            }
+            if (place.rating) {
+                // <i class="lni lni-star"></i>
+                document.getElementById("rating").innerHTML = '<i class="lni lni-star"></i> Rating : ' + place.rating;
+            } else {
+                document.getElementById("rating").innerHTML = "";
+            }
+            // if (place.icon) {
+            //     document.getElementById("icon").src = place.icon;
+            // } else {
+            //     document.getElementById("icon").src = "/images/food.png";
+            // }
+            
         } else {
-            document.getElementById("places").innerHTML = place.name + "\n\r" + place.formatted_address;
+            console.log("No Restaurant found")
+            document.getElementById("places").innerHTML = "Oops you're too picky, please try another search (choose another location, widen the radius, or change your filters)!";
+            document.getElementById("address").innerHTML = "";
+            document.getElementById("phone").innerHTML = "";
+            document.getElementById("website").innerHTML = "";
+            document.getElementById("rating").innerHTML = "";
         }
 
         google.maps.event.addListener(marker, "click", function() {
@@ -81,9 +127,6 @@ function getPlaceDetails(map, restaurantChoice){
             "<div><strong>" +
                 place.name +
                 "</strong><br>" +
-                "Place ID: " +
-                place.place_id +
-                "<br>" +
                 place.formatted_address +
                 "</div>"
             );
@@ -161,7 +204,16 @@ function doNearbySearch(service, map){
       maxPriceLevel: maxPriceLvl
   },//specific parameters of the search
   (results, status, pagination) => {
-      if (status !== "OK") return;
+      if (status !== "OK") { 
+        document.getElementById("result-restaurant").style.visibility = 'visible';
+        document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
+        document.getElementById("title").innerHTML = "";
+        document.getElementById("icon").innerHTML = "";
+        document.getElementById("address").innerHTML = "";
+        document.getElementById("phone").innerHTML = "";
+        document.getElementById("website").innerHTML = "";
+        document.getElementById("rating").innerHTML = "";
+    };
       createMarkers(results, map);
       }
   );//nearbySearch
@@ -176,6 +228,7 @@ function doNearbySearch(service, map){
 
 
 function createMarkers(places, map) {
+    console.log("places length "+places.length)
     const bounds = new google.maps.LatLngBounds();
     // const placesList = document.getElementById("places");
     const placesArray = [];
@@ -208,8 +261,11 @@ function createMarkers(places, map) {
         placesArray.push(place);
     }//for loop
 
-    setMapOnAll(map);// adds all the markers to the map via setMap()
-    map.fitBounds(bounds);
+    //code to keep the map from resizing if there are no results
+    if (placesArray.length > 0){
+        setMapOnAll(map);// adds all the markers to the map via setMap()
+        map.fitBounds(bounds);
+    }//if there are results
 
     // Add restaurant choice 
     restaurantChoice = genRandomResult(placesArray); 
@@ -282,7 +338,8 @@ function handleLocationError(browserHasGeolocation, infoWindow, newyork) {
 
 //takes user input (street address, general location, etc) and turns it into coordinates
 function geocodeAddress(geocoder, map) {
-  const address = document.getElementById("address").value;
+  const address = document.getElementById("geoaddress").value;
+  document.getElementById("result-restaurant").style.visibility = 'hidden';
   geocoder.geocode(
     {
       address: address
