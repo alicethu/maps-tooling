@@ -40,7 +40,7 @@ body {
 .result-card {
     width: 30vw; 
     height: 50vh; 
-    padding-top: 10vw; 
+    padding-top: 1vw; 
     padding-bottom: 10vw; 
     margin: 1.5vw;
 }
@@ -75,3 +75,44 @@ body {
   background: #8a8fa3;
   cursor: pointer;
 }
+
+.restaurant-photo {
+    height: 10vh;
+    width: 10vh;
+    margin-left: 12.5vw;
+}
+
+.stars-container {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+}
+
+.stars-container:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '★★★★★';
+  color: lightgray;
+}
+
+.stars-container:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '★★★★★';
+  color: gold;
+  overflow: hidden;
+}
+
+.stars-0:after { width: 0%; }
+.stars-10:after { width: 10%; }
+.stars-20:after { width: 20%; }
+.stars-30:after { width: 30%; }
+.stars-40:after { width: 40%; }
+.stars-50:after { width: 50%; }
+.stars-60:after { width: 60%; }
+.stars-70:after { width: 70%; }
+.stars-80:after { width: 80%; }
+.stars-90:after { width: 90%; }
+.stars-100:after { width: 100; }

@@ -57,8 +57,9 @@ function initMap() {
 function getPlaceDetails(map, restaurantChoice){
         const request = {
         placeId: restaurantChoice.place_id,
-        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry"]
+        fields: ["name", "formatted_address", "formatted_phone_number", "place_id", "geometry", "opening_hours", "website", "icon", "rating"]
     };
+    document.getElementById("result-restaurant").style.visibility = 'visible';
     const infowindow = new google.maps.InfoWindow();
     const service = new google.maps.places.PlacesService(map);
     service.getDetails(request, (place, status) => {
@@ -71,9 +72,42 @@ function getPlaceDetails(map, restaurantChoice){
 
         // If restaurant choice is null
         if (Object.is(place,null)) {
+            
             document.getElementById("places").innerHTML = "Oops you're too picky, choose another location or change your filters!";
         } else {
-            document.getElementById("places").innerHTML = place.name + "\n\r" + place.formatted_address;
+
+            document.getElementById("places").innerHTML = place.name;
+            if(place.formatted_phone_number) {
+                document.getElementById("address").innerHTML = '<i class="lni lni-restaurant"></i> Address : ' + place.formatted_address;
+            } else {
+                document.getElementById("address").innerHTML = "";
+            }
+            if(place.formatted_phone_number) {
+                document.getElementById("phone").innerHTML = '<i class="lni lni-phone"></i> Phone : ' + place.formatted_phone_number;
+            } else {
+                document.getElementById("phone").innerHTML = "";
+            }
+            if (place.website) {
+                if (place.website.length > 80) {
+                    document.getElementById("website").innerHTML = 'Website : ' + place.website.substring(0, 80);
+                } else {
+                    document.getElementById("website").innerHTML = 'Website : ' + place.website;
+                }
+            } else {
+                document.getElementById("website").innerHTML = "";
+            }
+            if (place.rating) {
+                // <i class="lni lni-star"></i>
+                document.getElementById("rating").innerHTML = '<i class="lni lni-star"></i> Rating : ' + place.rating;
+            } else {
+                document.getElementById("rating").innerHTML = "";
+            }
+            // if (place.icon) {
+            //     document.getElementById("icon").src = place.icon;
+            // } else {
+            //     document.getElementById("icon").src = "/images/food.png";
+            // }
+            
         }
 
         google.maps.event.addListener(marker, "click", function() {
@@ -302,3 +336,10 @@ function geocodeAddress(geocoder, map) {
     }
   );
 }//geocodeAddress
+
+function addScore(score, $domElement) {
+    $("<span class='stars-container'>")
+      .addClass("stars-" + score.toString())
+      .text("★★★★★")
+      .appendTo($domElement);
+}
