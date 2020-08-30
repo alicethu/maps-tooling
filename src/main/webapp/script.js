@@ -127,9 +127,6 @@ function getPlaceDetails(map, restaurantChoice){
             "<div><strong>" +
                 place.name +
                 "</strong><br>" +
-                "Place ID: " +
-                place.place_id +
-                "<br>" +
                 place.formatted_address +
                 "</div>"
             );
@@ -264,8 +261,11 @@ function createMarkers(places, map) {
         placesArray.push(place);
     }//for loop
 
-    setMapOnAll(map);// adds all the markers to the map via setMap()
-    map.fitBounds(bounds);
+    //code to keep the map from resizing if there are no results
+    if (placesArray.length > 0){
+        setMapOnAll(map);// adds all the markers to the map via setMap()
+        map.fitBounds(bounds);
+    }//if there are results
 
     // Add restaurant choice 
     restaurantChoice = genRandomResult(placesArray); 
