@@ -101,6 +101,14 @@ function getPlaceDetails(map, restaurantChoice){
             } else {
                 document.getElementById("rating").innerHTML = "";
             }
+        } else {
+            console.log("No Restaurant found")
+            document.getElementById("places").innerHTML = "Oops! You're too picky, please try another search (choose another location, widen the radius, or change your filters)!";
+            document.getElementById("address").innerHTML = "";
+            document.getElementById("phone").innerHTML = "";
+            document.getElementById("website").innerHTML = "";
+            document.getElementById("rating").innerHTML = "";
+        }
         google.maps.event.addListener(marker, "click", function() {
             infowindow.setContent(
             "<div><strong>" +
@@ -185,7 +193,7 @@ function doNearbySearch(service, map){
   (results, status, pagination) => {
       if (status !== "OK") { 
         document.getElementById("result-restaurant").style.visibility = 'visible';
-        document.getElementById("places").innerHTML = "Oops! You're too picky, choose another location or change your filters!";
+        document.getElementById("places").innerHTML = "Oops! You're too picky, please try another search (choose another location, widen the radius, or change your filters)!";
         document.getElementById("title").innerHTML = "";
         document.getElementById("icon").innerHTML = "";
         document.getElementById("address").innerHTML = "";
